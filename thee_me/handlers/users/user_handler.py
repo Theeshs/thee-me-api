@@ -1,9 +1,10 @@
-from sqlalchemy import select
+from sqlalchemy import select, delete
 from sqlalchemy.orm import Session, selectinload
 
 from ...models.user import User, Skill, UserSkillAssociation, Experience
 from .types import User as UserType, ResponseUser
 from ..skills.types import Skill as SkillSerializer
+from ..experiences.types import Experience as ExperianceSerializer
 
 
 async def save_user(db: Session, user: UserType):
@@ -56,13 +57,16 @@ async def me(db: Session):
         .select_from(User)
         .outerjoin(UserSkillAssociation)
         .outerjoin(Skill)
+        .outerjoin(Experience)
         .options(selectinload(User.skills))
+        .options(selectinload(User.experience))
         .where(User.email == "theekshana.sandaru@gmail.com")
+        .limit(1)
     )
     result = await db.execute(stmt)
     if result:
         result = result.scalar_one_or_none()
-        me = ResponseUser(
+        me_user = ResponseUser(
             first_name=result.first_name,
             last_name=result.last_name,
             dob=result.dob,
@@ -72,8 +76,11 @@ async def me(db: Session):
             description=result.description,
             skills=[
                 SkillSerializer.from_orm(item) for item in result.skills if item],
+            experience=[
+                ExperianceSerializer.from_orm(exp) for exp in result.experience if exp
+            ]
         )
-        return me
+        return me_user
     return None
 
 
@@ -86,5 +93,10 @@ async def assign_skill_to_user(db: Session, skill_list: list, user_id: int):
             "skill_id": skill,
             "user_id": user_id
         })
+    delete_statement = delete(UserSkillAssociation).where(UserSkillAssociation.user_id == user_id)
+    result = await db.execute(delete_statement)
+    deleted_rows = result.rowcount
+    await db.commit()
+    print(deleted_rows)
     await db.execute(UserSkillAssociation.__table__.insert().values(new_skill_records))
     await db.commit()
