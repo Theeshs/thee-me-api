@@ -1,9 +1,10 @@
-from fastapi import FastAPI, Depends, HTTPException, Request
-from fastapi.security import OAuth2PasswordBearer
-from fastapi.responses import JSONResponse
-from starlette.middleware.base import BaseHTTPMiddleware
-from fastapi_jwt_auth import AuthJWT
 import json
+
+from fastapi import Depends, FastAPI, HTTPException, Request
+from fastapi.responses import JSONResponse
+from fastapi.security import OAuth2PasswordBearer
+from fastapi_jwt_auth import AuthJWT
+from starlette.middleware.base import BaseHTTPMiddleware
 
 
 async def get_current_user(auth_jwt=Depends(AuthJWT)):

@@ -1,6 +1,12 @@
 from sqlalchemy.orm import Session
-from ..handlers.skills.skills_handler import list_all_skills, get_skill, create_skill, delete_skill
-from ..handlers.skills.types import Skill, SkillCreate
+
+from thee_me.handlers.skills.skills_handler import (
+    create_skill,
+    delete_skill,
+    get_skill,
+    list_all_skills,
+)
+from thee_me.handlers.skills.types import Skill, SkillCreate
 
 
 async def get_all_skills(db: Session):

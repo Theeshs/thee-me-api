@@ -1,8 +1,9 @@
-from sqlalchemy import select, delete
+from sqlalchemy import delete, select
 from sqlalchemy.orm import Session
 
 from ...models.user import Skill
-from ..skills.types import SkillCreate, Skill as SkillResponse
+from ..skills.types import Skill as SkillResponse
+from ..skills.types import SkillCreate
 
 
 async def list_all_skills(db: Session):
@@ -22,10 +23,7 @@ async def get_skill(db: Session, skill_name: str):
 
 
 async def create_skill(db: Session, skill: SkillCreate):
-    create_request = {
-        "name": skill.name,
-        "percentage": skill.percentage
-    }
+    create_request = {"name": skill.name, "percentage": skill.percentage}
     db_skill = Skill(**create_request)
     db.add(db_skill)
     await db.commit()

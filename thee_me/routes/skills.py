@@ -4,8 +4,14 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from thee_me.database.connection import get_async_db, get_db
-from ..services.skill_service import get_all_skills, skill_create, _get_skill_by_name, remove_skill
+
 from ..handlers.skills.types import SkillCreate
+from ..services.skill_service import (
+    _get_skill_by_name,
+    get_all_skills,
+    remove_skill,
+    skill_create,
+)
 
 router = APIRouter()
 

@@ -1,10 +1,11 @@
-from sqlalchemy import select, delete
+from sqlalchemy import delete, select
 from sqlalchemy.orm import Session, selectinload
 
-from ...models.user import User, Skill, UserSkillAssociation, Experience
-from .types import User as UserType, ResponseUser
-from ..skills.types import Skill as SkillSerializer
+from ...models.user import Experience, Skill, User, UserSkillAssociation
 from ..experiences.types import Experience as ExperianceSerializer
+from ..skills.types import Skill as SkillSerializer
+from .types import ResponseUser
+from .types import User as UserType
 
 
 async def save_user(db: Session, user: UserType):
@@ -74,11 +75,10 @@ async def me(db: Session):
             email=result.email,
             github_username=result.github_username,
             description=result.description,
-            skills=[
-                SkillSerializer.from_orm(item) for item in result.skills if item],
+            skills=[SkillSerializer.from_orm(item) for item in result.skills if item],
             experience=[
                 ExperianceSerializer.from_orm(exp) for exp in result.experience if exp
-            ]
+            ],
         )
         return me_user
     return None
@@ -89,11 +89,10 @@ async def assign_skill_to_user(db: Session, skill_list: list, user_id: int):
     skills = [skill.id for skill in result.scalars().all() if skill]
     new_skill_records = []
     for skill in skills:
-        new_skill_records.append({
-            "skill_id": skill,
-            "user_id": user_id
-        })
-    delete_statement = delete(UserSkillAssociation).where(UserSkillAssociation.user_id == user_id)
+        new_skill_records.append({"skill_id": skill, "user_id": user_id})
+    delete_statement = delete(UserSkillAssociation).where(
+        UserSkillAssociation.user_id == user_id
+    )
     result = await db.execute(delete_statement)
     deleted_rows = result.rowcount
     await db.commit()

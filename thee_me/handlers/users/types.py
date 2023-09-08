@@ -1,10 +1,10 @@
 from datetime import date
+from typing import List, Optional
 
-from pydantic import BaseModel, Field, EmailStr
-from typing import Optional
-from typing import List
-from ..skills.types import Skill
+from pydantic import BaseModel, EmailStr, Field
+
 from ..experiences.types import Experience
+from ..skills.types import Skill
 
 
 class User(BaseModel):

@@ -1,28 +1,24 @@
-from fastapi import FastAPI, HTTPException, Depends, Request
+from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi_jwt_auth import AuthJWT
-from pydantic import BaseModel
-from fastapi_jwt_auth.exceptions import AuthJWTException
 from fastapi.responses import JSONResponse
+from fastapi_jwt_auth import AuthJWT
+from fastapi_jwt_auth.exceptions import AuthJWTException
+from pydantic import BaseModel
 
-from thee_me.routes import user
-from thee_me.routes import skills
-from thee_me.routes import experiance
+from thee_me.routes import experiance, skills, user
 
 # from thee_me.middlewares.auth_middleware import JWTMiddleware
 
 
 def create_app() -> FastAPI:
     app = FastAPI()
-    origins = [
-        "*"
-    ]
+    origins = ["*"]
     app.add_middleware(
         CORSMiddleware,
         allow_origins=origins,
         allow_credentials=True,
         allow_methods=["*"],
-        allow_headers=["*"]
+        allow_headers=["*"],
     )
 
     app.include_router(
@@ -60,7 +56,4 @@ def get_config():
 
 @app.exception_handler(AuthJWTException)
 def authjwt_exception_handler(request: Request, exc: AuthJWTException):
-    return JSONResponse(
-        status_code=exc.status_code,
-        content={"detail": exc.message}
-    )
+    return JSONResponse(status_code=exc.status_code, content={"detail": exc.message})

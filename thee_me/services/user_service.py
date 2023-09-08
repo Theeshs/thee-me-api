@@ -1,10 +1,18 @@
+import json
+
 from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
 from ..handlers.users.types import Credentials, ResponseUser, User
-from ..handlers.users.user_handler import get_user, list_all_users, save_user, me, assign_skill_to_user, get_user_by_user_id
+from ..handlers.users.user_handler import (
+    assign_skill_to_user,
+    get_user,
+    get_user_by_user_id,
+    list_all_users,
+    me,
+    save_user,
+)
 from ..utils.password_utils import match_password, set_password_hash
-import json
 
 
 async def create_user(db: Session, user: User):
@@ -25,16 +33,24 @@ async def login_user(db: Session, creds: Credentials, Authorize: AuthJWT):
     if not await match_password(creds.password, user.password):
         raise Exception("Unauthorized")
     return {
-        "access_token": Authorize.create_access_token(subject=json.dumps({
-            "username": user.username,
-            "email": user.email,
-            "id": user.id if user.id else None
-        })),
-        "refresh_token": Authorize.create_refresh_token(subject=json.dumps({
-            "username": user.username,
-            "email": user.email,
-            "id": user.id if user.id else None
-        })),
+        "access_token": Authorize.create_access_token(
+            subject=json.dumps(
+                {
+                    "username": user.username,
+                    "email": user.email,
+                    "id": user.id if user.id else None,
+                }
+            )
+        ),
+        "refresh_token": Authorize.create_refresh_token(
+            subject=json.dumps(
+                {
+                    "username": user.username,
+                    "email": user.email,
+                    "id": user.id if user.id else None,
+                }
+            )
+        ),
     }
 
 

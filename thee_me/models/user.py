@@ -1,4 +1,13 @@
-from sqlalchemy import Column, DateTime, String, Text, Table, Integer, ForeignKey, Boolean
+from sqlalchemy import (
+    Boolean,
+    Column,
+    DateTime,
+    ForeignKey,
+    Integer,
+    String,
+    Table,
+    Text,
+)
 from sqlalchemy.orm import relationship
 
 from .base_model import BaseModel
@@ -15,8 +24,12 @@ class User(BaseModel):
     email = Column(String(150), nullable=False)
     github_username = Column(String(150), nullable=True)
     description = Column(Text, nullable=True)
-    skills = relationship("Skill", secondary="user_skill_association",
-                          back_populates="users", lazy="selectin")
+    skills = relationship(
+        "Skill",
+        secondary="user_skill_association",
+        back_populates="users",
+        lazy="selectin",
+    )
     experience = relationship("Experience", back_populates="user")
 
 
@@ -25,17 +38,27 @@ class Skill(BaseModel):
 
     name = Column(String(150), nullable=False)
     percentage = Column(Integer, nullable=True)
-    users = relationship("User", secondary="user_skill_association",
-                         back_populates="skills", lazy="selectin")
+    users = relationship(
+        "User",
+        secondary="user_skill_association",
+        back_populates="skills",
+        lazy="selectin",
+    )
 
 
 class UserSkillAssociation(BaseModel):
     __tablename__ = "user_skill_association"
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    user_id = Column(Integer, ForeignKey(
-        "user.id", ondelete="CASCADE"), nullable=True,)
-    skill_id = Column(Integer, ForeignKey(
-        "skill.id", ondelete="CASCADE"), nullable=True,)
+    user_id = Column(
+        Integer,
+        ForeignKey("user.id", ondelete="CASCADE"),
+        nullable=True,
+    )
+    skill_id = Column(
+        Integer,
+        ForeignKey("skill.id", ondelete="CASCADE"),
+        nullable=True,
+    )
 
 
 class Experience(BaseModel):
