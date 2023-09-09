@@ -1,14 +1,16 @@
 from sqlalchemy.orm import Session
 
-from thee_me.handlers.experiences.experience_handler import create_experience, get_experiences
+from thee_me.handlers.experiences.experience_handler import (
+    create_experience,
+    get_experiences,
+)
 from thee_me.handlers.experiences.types import Experience
-from thee_me.handlers.users.user_handler import get_user
 
 
 async def user_experiences_list_service(db: Session, user_id: int):
-    """ list all the user experiences
-        :db - database connnetion
-        :user_id - id of the logged user
+    """list all the user experiences
+    :db - database connnetion
+    :user_id - id of the logged user
     """
     experiences = await get_experiences(db, user_id)
     if not experiences:

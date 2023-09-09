@@ -1,7 +1,19 @@
 """ service controllers for the educations """
+from typing import List
+
 from sqlalchemy.orm import Session
-from thee_me.handlers.
+
+from thee_me.handlers.educations.educations_handler import (
+    create_education,
+    list_educations,
+)
+from thee_me.handlers.educations.types import EducationCreate
 
 
-def get_all_educations(db: Session, user_id: int):
-    return list_educations(db, user_id)
+async def get_all_educations(db: Session, user_id: int):
+    """get all user educations"""
+    return await list_educations(db, user_id)
+
+
+async def save_education(db: Session, user_id: int, payload: EducationCreate):
+    return await create_education(db, user_id, payload)

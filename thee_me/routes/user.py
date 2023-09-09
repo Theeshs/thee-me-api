@@ -6,7 +6,6 @@ from sqlalchemy.orm import Session
 
 from thee_me.database.connection import get_async_db
 from thee_me.handlers.users.types import Credentials, User, UserSkillAssignment
-
 from thee_me.services.user_service import (
     create_user,
     list_users,

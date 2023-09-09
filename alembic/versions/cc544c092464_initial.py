@@ -1,8 +1,8 @@
 """initial
 
-Revision ID: a3e02cd670b0
+Revision ID: cc544c092464
 Revises: 
-Create Date: 2023-06-29 23:38:56.630129
+Create Date: 2023-09-09 23:06:55.918502
 
 """
 import sqlalchemy as sa
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 from alembic import op
 
 # revision identifiers, used by Alembic.
-revision = "a3e02cd670b0"
+revision = "cc544c092464"
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -43,6 +43,38 @@ def upgrade() -> None:
         sa.PrimaryKeyConstraint("id"),
     )
     op.create_table(
+        "education",
+        sa.Column("institue_name", sa.String(length=200), nullable=False),
+        sa.Column("start_date", sa.DateTime(), nullable=False),
+        sa.Column("end_date", sa.DateTime(), nullable=True),
+        sa.Column("user_id", sa.Integer(), nullable=True),
+        sa.Column("id", sa.Integer(), nullable=False),
+        sa.Column("created_at", sa.DateTime(), nullable=True),
+        sa.Column("updated_at", sa.DateTime(), nullable=True),
+        sa.ForeignKeyConstraint(
+            ["user_id"],
+            ["user.id"],
+        ),
+        sa.PrimaryKeyConstraint("id"),
+    )
+    op.create_table(
+        "experience",
+        sa.Column("company_name", sa.String(length=200), nullable=False),
+        sa.Column("start_date", sa.DateTime(), nullable=False),
+        sa.Column("end_date", sa.DateTime(), nullable=True),
+        sa.Column("current_place", sa.Boolean(), nullable=True),
+        sa.Column("position", sa.String(length=200), nullable=False),
+        sa.Column("user_id", sa.Integer(), nullable=True),
+        sa.Column("id", sa.Integer(), nullable=False),
+        sa.Column("created_at", sa.DateTime(), nullable=True),
+        sa.Column("updated_at", sa.DateTime(), nullable=True),
+        sa.ForeignKeyConstraint(
+            ["user_id"],
+            ["user.id"],
+        ),
+        sa.PrimaryKeyConstraint("id"),
+    )
+    op.create_table(
         "user_skill_association",
         sa.Column("id", sa.Integer(), autoincrement=True, nullable=False),
         sa.Column("user_id", sa.Integer(), nullable=True),
@@ -68,6 +100,8 @@ def downgrade() -> None:
         op.f("ix_user_skill_association_id"), table_name="user_skill_association"
     )
     op.drop_table("user_skill_association")
+    op.drop_table("experience")
+    op.drop_table("education")
     op.drop_table("user")
     op.drop_table("skill")
     # ### end Alembic commands ###

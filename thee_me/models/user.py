@@ -31,7 +31,7 @@ class User(BaseModel):
         lazy="selectin",
     )
     experience = relationship("Experience", back_populates="user")
-    experience = relationship("Educations", back_populates="user_educations")
+    education = relationship("Educations", back_populates="user")
 
 
 class Skill(BaseModel):
@@ -79,5 +79,9 @@ class Educations(BaseModel):
     institue_name = Column(String(200), nullable=False)
     start_date = Column(DateTime, nullable=False)
     end_date = Column(DateTime, nullable=True)
+    mode_of_study = Column(String(200), nullable=False)
+    degree_type = Column(String(200), nullable=False)
+    area_of_study = Column(String(200), nullable=False)
+    currenty_studying = Column(Boolean, nullable=True)
     user_id = Column(Integer, ForeignKey("user.id"))
-    user = relationship("User", back_populates="experience")
+    user = relationship("User", back_populates="education")
