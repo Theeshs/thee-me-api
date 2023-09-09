@@ -1,9 +1,10 @@
 from sqlalchemy import delete, select
 from sqlalchemy.orm import Session, selectinload
 
-from ...models.user import Experience, Skill, User, UserSkillAssociation
-from ..experiences.types import Experience as ExperianceSerializer
-from ..skills.types import Skill as SkillSerializer
+from ...models.user import Experience, Skill, User, UserSkillAssociation, Educations
+from thee_me.handlers.experiences.types import Experience as ExperianceSerializer
+from thee_me.handlers.skills.types import Skill as SkillSerializer
+from thee_me.handlers.educations.types import EducationReturn as EducationSerializer
 from .types import ResponseUser
 from .types import User as UserType
 
@@ -59,8 +60,10 @@ async def me(db: Session):
         .outerjoin(UserSkillAssociation)
         .outerjoin(Skill)
         .outerjoin(Experience)
+        .outerjoin(Educations)
         .options(selectinload(User.skills))
         .options(selectinload(User.experience))
+        .options(selectinload(User.education))
         .where(User.email == "theekshana.sandaru@gmail.com")
         .limit(1)
     )
@@ -79,6 +82,9 @@ async def me(db: Session):
             experience=[
                 ExperianceSerializer.from_orm(exp) for exp in result.experience if exp
             ],
+            education=[
+                EducationSerializer.from_orm(edu) for edu in result.education if edu
+            ]
         )
         return me_user
     return None

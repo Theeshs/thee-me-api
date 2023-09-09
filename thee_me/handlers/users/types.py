@@ -4,6 +4,7 @@ from typing import List, Optional
 from pydantic import BaseModel, EmailStr, Field
 
 from ..experiences.types import Experience
+from..educations.types import EducationReturn
 from ..skills.types import Skill
 
 
@@ -38,6 +39,7 @@ class ResponseUser(BaseModel):
     description: str
     skills: Optional[List[Skill]] = []
     experience: Optional[List[Experience]]
+    education: Optional[List[EducationReturn]]
 
     class Config:
         orm_mode = True
