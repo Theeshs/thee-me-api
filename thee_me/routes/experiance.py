@@ -20,7 +20,8 @@ async def experiences(
     """creating user experiences"""
     return await create_user_experience(db, current_user.get("email"), experience)
 
+
 @router.get("/experiences")
 async def list_user_experiences(db: Session = Depends(get_async_db), current_user: dict = Depends(get_current_user),):
     """listing user experiences"""
-    return await list_experiences(db, current_user["email"])
+    return await list_experiences(db, current_user["id"])

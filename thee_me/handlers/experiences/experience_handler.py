@@ -14,7 +14,8 @@ async def get_experiences(db: Session, user_id: int):
 
 async def get_experience(db: Session, id: int, user_id: int):
     result = await db.execute(
-        select(Experience).where(Experience.id == id, Experience.user_id == user_id)
+        select(Experience).where(Experience.id ==
+                                 id, Experience.user_id == user_id)
     )
     experience = result.scalar_one_or_none()
     return experience
