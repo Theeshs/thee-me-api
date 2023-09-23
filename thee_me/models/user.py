@@ -24,6 +24,13 @@ class User(BaseModel):
     email = Column(String(150), nullable=False)
     github_username = Column(String(150), nullable=True)
     description = Column(Text, nullable=True)
+    mobile_number = Column(Integer, default=81502210)
+    address_block = Column(String(50), nullable=True, default="#04-181")
+    address_street = Column(String(250), nullable=True,
+                            default="311, Hougang Avenue 5")
+    recidential_country = Column(
+        String(60), nullable=True, default="Singapore")
+    nationality = Column(String(70), default="Sri Lankan")
     skills = relationship(
         "Skill",
         secondary="user_skill_association",
@@ -32,6 +39,7 @@ class User(BaseModel):
     )
     experience = relationship("Experience", back_populates="user")
     education = relationship("Educations", back_populates="user")
+    mobile_number = Column(Integer, nullable=False)
 
 
 class Skill(BaseModel):

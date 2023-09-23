@@ -1,11 +1,11 @@
+from ..skills.types import Skill
 from datetime import date
 from typing import List, Optional
 
 from pydantic import BaseModel, EmailStr, Field
 
 from ..experiences.types import Experience
-from..educations.types import EducationReturn
-from ..skills.types import Skill
+from ..educations.types import EducationReturn
 
 
 class User(BaseModel):
@@ -37,6 +37,11 @@ class ResponseUser(BaseModel):
     email: str = Field(..., description="email of the user")
     github_username: str
     description: str
+    address_street: str
+    address_block: str
+    recidential_country: str
+    nationality: str
+    mobile_number: str
     skills: Optional[List[Skill]] = []
     experience: Optional[List[Experience]]
     education: Optional[List[EducationReturn]]

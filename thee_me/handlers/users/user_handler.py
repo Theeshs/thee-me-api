@@ -78,7 +78,13 @@ async def me(db: Session):
             email=result.email,
             github_username=result.github_username,
             description=result.description,
-            skills=[SkillSerializer.from_orm(item) for item in result.skills if item],
+            recidential_country=result.recidential_country,
+            address_block=result.address_block,
+            address_street=result.address_street,
+            mobile_number=result.mobile_number,
+            nationality=result.nationality,
+            skills=[SkillSerializer.from_orm(item)
+                    for item in result.skills if item],
             experience=[
                 ExperianceSerializer.from_orm(exp) for exp in result.experience if exp
             ],
