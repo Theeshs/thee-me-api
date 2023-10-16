@@ -34,3 +34,8 @@ async def get_skill_by_name(skill_name, db: Session = Depends(get_async_db)):
 @router.delete("/skills/{skill_name}")
 async def delete_skill(skill_name: str, db: Session = Depends(get_async_db)):
     return await remove_skill(db, skill_name)
+
+
+@router.get("/v2/skills")
+async def skills_list(db: Session = Depends(get_async_db)):
+    return await get_all_skills(db)

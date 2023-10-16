@@ -46,7 +46,6 @@ class Skill(BaseModel):
     __tablename__ = "skill"
 
     name = Column(String(150), nullable=False)
-    percentage = Column(Integer, nullable=True)
     users = relationship(
         "User",
         secondary="user_skill_association",
@@ -68,6 +67,7 @@ class UserSkillAssociation(BaseModel):
         ForeignKey("skill.id", ondelete="CASCADE"),
         nullable=True,
     )
+    percentage = Column(Integer, nullable=True)
 
 
 class Experience(BaseModel):

@@ -33,3 +33,7 @@ async def remove_skill(db: Session, skill_name: str):
         raise Exception("No skill found")
     await delete_skill(db, skill_found.name)
     return True
+
+
+async def get_all_skills_v2(db: Session):
+    return
