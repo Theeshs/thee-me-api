@@ -40,3 +40,11 @@ async def delete_skill(db: Session, skill_name: str):
         return True
     else:
         raise Exception("Unable to delete the skill")
+
+
+async def save_skill(skill_name: str, db: Session):
+    skill = Skill(name=skill_name)
+    db.add(skill)
+    await db.commit()
+    await db.refresh(skill)
+    return skill

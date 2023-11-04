@@ -25,3 +25,18 @@ class SkillWithName(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class SkillV2(BaseModel):
+    name: str
+
+    class Config:
+        orm_mode = True
+
+
+class UserSkill(BaseModel):
+    id: int
+    percentage: int
+
+    class Config:
+        orm_mode = True

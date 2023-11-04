@@ -1,4 +1,7 @@
 from sqlalchemy.orm import Session
+from typing import Dict
+from ..handlers.skills.skills_handler import save_skill
+from ..handlers.skills.types import SkillV2
 
 from thee_me.handlers.skills.skills_handler import (
     create_skill,
@@ -11,7 +14,7 @@ from thee_me.handlers.skills.types import Skill, SkillCreate
 
 async def get_all_skills(db: Session):
     skills = await list_all_skills(db)
-    formatted_skills = [Skill.from_orm(skill).dict() for skill in skills]
+    formatted_skills = [SkillV2.from_orm(skill).dict().get("name ") for skill in skills]
     return formatted_skills
 
 
@@ -37,3 +40,7 @@ async def remove_skill(db: Session, skill_name: str):
 
 async def get_all_skills_v2(db: Session):
     return
+
+
+async def create_skill_v2(request_data: SkillV2, db: Session):
+    return await save_skill(request_data.name, db)

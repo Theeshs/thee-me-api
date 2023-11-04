@@ -1,4 +1,4 @@
-from ..skills.types import Skill
+from ..skills.types import Skill, UserSkill
 from datetime import date
 from typing import List, Optional
 
@@ -42,7 +42,7 @@ class ResponseUser(BaseModel):
     recidential_country: str
     nationality: str
     mobile_number: str
-    skills: Optional[List[Skill]] = []
+    skills: Optional[List[UserSkill]] = []
     experience: Optional[List[Experience]]
     education: Optional[List[EducationReturn]]
 
@@ -50,5 +50,10 @@ class ResponseUser(BaseModel):
         orm_mode = True
 
 
+class UserSkill(BaseModel):
+    name: str
+    percentage: int
+
+
 class UserSkillAssignment(BaseModel):
-    skills: List[str]
+    skills: List[UserSkill]

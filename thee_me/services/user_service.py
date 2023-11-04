@@ -66,7 +66,7 @@ async def thee_me(db: Session):
 
 
 async def user_skill_add(db: Session, user_id: int, skill_list: list):
-    user = await get_user_by_user_id(db, user_id)
+    user = await get_user_by_user_id(db, user_id, raw_object=True)
     if not user:
         raise Exception("No user available")
     await assign_skill_to_user(db, skill_list, user_id)

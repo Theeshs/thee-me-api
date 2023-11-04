@@ -13,6 +13,7 @@ from thee_me.services.user_service import (
     thee_me,
     user_skill_add,
 )
+from typing import  List
 
 router = APIRouter()
 

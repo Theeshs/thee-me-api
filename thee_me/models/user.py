@@ -23,35 +23,25 @@ class User(BaseModel):
     password = Column(String(350), nullable=False)
     email = Column(String(150), nullable=False)
     github_username = Column(String(150), nullable=True)
-    description = Column(Text, nullable=True)
-    mobile_number = Column(Integer, default=81502210)
+    description = Column(Text, nullable=True, default=81502210)
+    mobile_number = Column(Integer, nullable=True)
     address_block = Column(String(50), nullable=True, default="#04-181")
     address_street = Column(String(250), nullable=True,
                             default="311, Hougang Avenue 5")
     recidential_country = Column(
         String(60), nullable=True, default="Singapore")
     nationality = Column(String(70), default="Sri Lankan")
-    skills = relationship(
-        "Skill",
-        secondary="user_skill_association",
-        back_populates="users",
-        lazy="selectin",
-    )
+    skill_association = relationship("UserSkillAssociation", back_populates="user")
     experience = relationship("Experience", back_populates="user")
     education = relationship("Educations", back_populates="user")
-    mobile_number = Column(Integer, nullable=False)
+    mobile_number = Column(Integer, nullable=False )
 
 
 class Skill(BaseModel):
     __tablename__ = "skill"
 
-    name = Column(String(150), nullable=False)
-    users = relationship(
-        "User",
-        secondary="user_skill_association",
-        back_populates="skills",
-        lazy="selectin",
-    )
+    name = Column(String(150), nullable=False, unique=True)
+    user_association = relationship("UserSkillAssociation", back_populates="skill")
 
 
 class UserSkillAssociation(BaseModel):
@@ -66,8 +56,12 @@ class UserSkillAssociation(BaseModel):
         Integer,
         ForeignKey("skill.id", ondelete="CASCADE"),
         nullable=True,
+        unique=True
     )
     percentage = Column(Integer, nullable=True)
+    user = relationship("User", back_populates="skill_association")
+    skill = relationship("Skill", back_populates="user_association")
+
 
 
 class Experience(BaseModel):

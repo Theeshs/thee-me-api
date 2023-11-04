@@ -1,30 +1,35 @@
-from sqlalchemy import delete, select
-from sqlalchemy.orm import Session, selectinload
+from sqlalchemy import delete, select, func
+from sqlalchemy.orm import Session, selectinload, aliased
 
 from ...models.user import Experience, Skill, User, UserSkillAssociation, Educations
 from thee_me.handlers.experiences.types import Experience as ExperianceSerializer
 from thee_me.handlers.skills.types import Skill as SkillSerializer
+from thee_me.handlers.skills.types import UserSkill as SkillSerializerV2
 from thee_me.handlers.educations.types import EducationReturn as EducationSerializer
 from .types import ResponseUser
 from .types import User as UserType
 
 
 async def save_user(db: Session, user: UserType):
-    user_ = {
-        "first_name": user.first_name,
-        "last_name": user.last_name,
-        "password": user.password,
-        "dob": user.dob,
-        "description": user.description,
-        "email": user.email,
-        "github_username": user.github_username,
-        "username": user.username,
-    }
-    db_user = User(**user_)
-    db.add(db_user)
-    await db.commit()
-    await db.refresh(db_user)
-    return user
+    try:
+        user_ = {
+            "first_name": user.first_name,
+            "last_name": user.last_name,
+            "password": user.password,
+            "dob": user.dob,
+            "description": user.description,
+            "email": user.email,
+            "github_username": user.github_username,
+            "username": user.username,
+            "mobile_number": 81502210
+        }
+        db_user = User(**user_)
+        db.add(db_user)
+        await db.commit()
+        await db.refresh(db_user)
+        return user
+    except Exception as e:
+        print(e)
 
 
 async def get_user(db: Session, email: str):
@@ -37,9 +42,11 @@ async def get_user(db: Session, email: str):
     return None
 
 
-async def get_user_by_user_id(db: Session, user_id: int):
+async def get_user_by_user_id(db: Session, user_id: int, raw_object=False):
     result = await db.execute(select(User).where(User.id == user_id))
     user = result.scalar_one_or_none()
+    if raw_object:
+        return user
     if user:
         # Assuming User is a SQLAlchemy model
         user_obj = UserType.from_orm(user)
@@ -55,18 +62,17 @@ async def list_all_users(db: Session):
 
 async def me(db: Session):
     stmt = (
-        select(User, Skill)
+        select(User, Skill.name, UserSkillAssociation.percentage, UserSkillAssociation.skill..name)
         .select_from(User)
         .outerjoin(UserSkillAssociation)
         .outerjoin(Skill)
-        .outerjoin(Experience)
-        .outerjoin(Educations)
-        .options(selectinload(User.skills))
+        .options(selectinload(User.skill_association))
         .options(selectinload(User.experience))
         .options(selectinload(User.education))
         .where(User.email == "theekshana.sandaru@gmail.com")
         .limit(1)
     )
+
     result = await db.execute(stmt)
     if result:
         result = result.scalar_one_or_none()
@@ -83,8 +89,8 @@ async def me(db: Session):
             address_street=result.address_street,
             mobile_number=result.mobile_number,
             nationality=result.nationality,
-            skills=[SkillSerializer.from_orm(item)
-                    for item in result.skills if item],
+            skills=[SkillSerializerV2.from_orm(item)
+                    for item in result.skill_association if item],
             experience=[
                 ExperianceSerializer.from_orm(exp) for exp in result.experience if exp
             ],
@@ -97,17 +103,28 @@ async def me(db: Session):
 
 
 async def assign_skill_to_user(db: Session, skill_list: list, user_id: int):
-    result = await db.execute(select(Skill).where(Skill.name.in_(skill_list)))
-    skills = [skill.id for skill in result.scalars().all() if skill]
-    new_skill_records = []
-    for skill in skills:
-        new_skill_records.append({"skill_id": skill, "user_id": user_id})
-    delete_statement = delete(UserSkillAssociation).where(
-        UserSkillAssociation.user_id == user_id
-    )
-    result = await db.execute(delete_statement)
-    deleted_rows = result.rowcount
-    await db.commit()
-    print(deleted_rows)
-    await db.execute(UserSkillAssociation.__table__.insert().values(new_skill_records))
-    await db.commit()
+    for skill in skill_list:
+        actual_skill = await db.execute(select(Skill).where(Skill.name == skill.name))
+        result = actual_skill.scalar_one_or_none()
+        new_record = UserSkillAssociation(user_id=user_id, skill_id=result.id
+                                          , percentage=skill.percentage)
+        db.add(new_record)
+        await db.commit()
+        await db.refresh(new_record)
+        return new_record
+    # result = await db.execute(select(Skill).where(Skill.name.in_(skill_list)))
+    # skill = result.scalar_one_or_none()
+    # skills = [skill.id for skill in result.scalars().all() if skill]
+    # new_skill_records = []
+    # for skill in skills:
+    #     new_skill_records.append({"skill_id": skill, "user_id": user_id})
+    # delete_statement = delete(UserSkillAssociation).where(
+    #     UserSkillAssociation.user_id == user_id
+    # )
+    # result = await db.execute(delete_statement)
+    # deleted_rows = result.rowcount
+    # await db.commit()
+    # print(deleted_rows)
+    # await db.execute(UserSkillAssociation.__table__.insert().values(new_skill_records))
+    # await db.commit()
+

@@ -1,1 +1,1 @@
-alembic revision --autogenerate -m "create tables"
+`alembic revision --autogenerate -m "create tables"`

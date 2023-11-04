@@ -5,12 +5,13 @@ from sqlalchemy.orm import Session
 
 from thee_me.database.connection import get_async_db, get_db
 
-from ..handlers.skills.types import SkillCreate
+from ..handlers.skills.types import SkillCreate, SkillV2
 from ..services.skill_service import (
     _get_skill_by_name,
     get_all_skills,
     remove_skill,
     skill_create,
+    create_skill_v2
 )
 
 router = APIRouter()
@@ -39,3 +40,8 @@ async def delete_skill(skill_name: str, db: Session = Depends(get_async_db)):
 @router.get("/v2/skills")
 async def skills_list(db: Session = Depends(get_async_db)):
     return await get_all_skills(db)
+
+
+@router.post("/v2/skills")
+async def skills_create_v2(skill: SkillV2, db: Session = Depends(get_async_db)):
+    return await create_skill_v2(skill, db)
