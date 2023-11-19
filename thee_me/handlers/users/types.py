@@ -42,7 +42,7 @@ class ResponseUser(BaseModel):
     recidential_country: str
     nationality: str
     mobile_number: str
-    skills: Optional[List[UserSkill]] = []
+    skills: Optional[List[Skill]] = []
     experience: Optional[List[Experience]]
     education: Optional[List[EducationReturn]]
 

@@ -59,14 +59,27 @@ async def list_all_users(db: Session):
     users = result.scalars().all()
     return users
 
+async def list_user_skills(db: Session, user_id: int):
+    stmt = (
+        select(Skill, UserSkillAssociation.percentage)
+        .select_from(Skill)
+        .join(UserSkillAssociation)
+        .options(selectinload(Skill.user_association))
+        .where(UserSkillAssociation.user_id == user_id)
+    )
+    result = await db.execute(stmt)
+    if result:
+        result = result.scalars().all()
+    # skills = [for ]
+    skills = [{"name": skill_obj.name, "percentage": skill_obj.user_association[0].percentage} for skill_obj in result]
+    return skills
+
 
 async def me(db: Session):
+    print("me")
     stmt = (
-        select(User, Skill.name, UserSkillAssociation.percentage, UserSkillAssociation.skill..name)
+        select(User, Skill, UserSkillAssociation)
         .select_from(User)
-        .outerjoin(UserSkillAssociation)
-        .outerjoin(Skill)
-        .options(selectinload(User.skill_association))
         .options(selectinload(User.experience))
         .options(selectinload(User.education))
         .where(User.email == "theekshana.sandaru@gmail.com")
@@ -76,6 +89,7 @@ async def me(db: Session):
     result = await db.execute(stmt)
     if result:
         result = result.scalar_one_or_none()
+        skills = await list_user_skills(db, result.id)
         me_user = ResponseUser(
             first_name=result.first_name,
             last_name=result.last_name,
@@ -89,8 +103,8 @@ async def me(db: Session):
             address_street=result.address_street,
             mobile_number=result.mobile_number,
             nationality=result.nationality,
-            skills=[SkillSerializerV2.from_orm(item)
-                    for item in result.skill_association if item],
+            skills=[SkillSerializer.parse_obj(item)
+                    for item in skills if item],
             experience=[
                 ExperianceSerializer.from_orm(exp) for exp in result.experience if exp
             ],

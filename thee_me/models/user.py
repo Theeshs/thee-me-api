@@ -34,13 +34,14 @@ class User(BaseModel):
     skill_association = relationship("UserSkillAssociation", back_populates="user")
     experience = relationship("Experience", back_populates="user")
     education = relationship("Educations", back_populates="user")
-    mobile_number = Column(Integer, nullable=False )
+    skills = relationship("Skill", secondary="user_skill_association", back_populates="users")
 
 
 class Skill(BaseModel):
     __tablename__ = "skill"
 
     name = Column(String(150), nullable=False, unique=True)
+    users = relationship("User", secondary="user_skill_association", back_populates="skills")
     user_association = relationship("UserSkillAssociation", back_populates="skill")
 
 
