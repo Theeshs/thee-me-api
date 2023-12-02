@@ -37,8 +37,7 @@ async def get_user(db: Session, email: str):
     user = result.scalar_one_or_none()
     if user:
         # Assuming User is a SQLAlchemy model
-        user_obj = UserType.from_orm(user)
-        return user_obj
+        return user
     return None
 
 
