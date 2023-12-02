@@ -5,7 +5,6 @@ from sqlalchemy import (
     ForeignKey,
     Integer,
     String,
-    Table,
     Text,
 )
 from sqlalchemy.orm import relationship
@@ -35,6 +34,7 @@ class User(BaseModel):
     experience = relationship("Experience", back_populates="user")
     education = relationship("Educations", back_populates="user")
     skills = relationship("Skill", secondary="user_skill_association", back_populates="users")
+    services = relationship("UserService", back_populates="user")
 
 
 class Skill(BaseModel):
@@ -88,3 +88,13 @@ class Educations(BaseModel):
     currenty_studying = Column(Boolean, nullable=True)
     user_id = Column(Integer, ForeignKey("user.id"))
     user = relationship("User", back_populates="education")
+
+
+class UserService(BaseModel):
+    __tablename__ = "user_services"
+
+    service_name = Column(String(200))
+    service_description = Column(String(200))
+    service_icon = Column(String(100))
+    user = relationship("User", back_populates="services")
+
