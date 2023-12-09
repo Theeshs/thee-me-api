@@ -77,7 +77,7 @@ async def list_user_skills(db: Session, user_id: int):
 async def me(db: Session):
     print("me")
     stmt = (
-        select(User, Skill, UserSkillAssociation)
+        select(User, Skill)
         .select_from(User)
         .options(selectinload(User.experience))
         .options(selectinload(User.education))
