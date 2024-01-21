@@ -1,12 +1,4 @@
-from sqlalchemy import (
-    Boolean,
-    Column,
-    DateTime,
-    ForeignKey,
-    Integer,
-    String,
-    Text,
-)
+from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import relationship
 
 from .base_model import BaseModel
@@ -25,16 +17,17 @@ class User(BaseModel):
     description = Column(Text, nullable=True, default=81502210)
     mobile_number = Column(Integer, nullable=True)
     address_block = Column(String(50), nullable=True, default="#04-181")
-    address_street = Column(String(250), nullable=True,
-                            default="311, Hougang Avenue 5")
-    recidential_country = Column(
-        String(60), nullable=True, default="Singapore")
+    address_street = Column(String(250), nullable=True, default="311, Hougang Avenue 5")
+    recidential_country = Column(String(60), nullable=True, default="Singapore")
     nationality = Column(String(70), default="Sri Lankan")
     skill_association = relationship("UserSkillAssociation", back_populates="user")
     experience = relationship("Experience", back_populates="user")
     education = relationship("Educations", back_populates="user")
     skills = relationship(
-        "Skill", secondary="user_skill_association", back_populates="users", overlaps="skill_association"
+        "Skill",
+        secondary="user_skill_association",
+        back_populates="users",
+        overlaps="skill_association",
     )
     services = relationship("UserService", back_populates="user")
 
@@ -43,7 +36,9 @@ class Skill(BaseModel):
     __tablename__ = "skill"
 
     name = Column(String(150), nullable=False, unique=True)
-    users = relationship("User", secondary="user_skill_association", back_populates="skills")
+    users = relationship(
+        "User", secondary="user_skill_association", back_populates="skills"
+    )
     user_association = relationship("UserSkillAssociation", back_populates="skill")
 
 
@@ -56,15 +51,11 @@ class UserSkillAssociation(BaseModel):
         nullable=True,
     )
     skill_id = Column(
-        Integer,
-        ForeignKey("skill.id", ondelete="CASCADE"),
-        nullable=True,
-        unique=True
+        Integer, ForeignKey("skill.id", ondelete="CASCADE"), nullable=True, unique=True
     )
     percentage = Column(Integer, nullable=True)
     user = relationship("User", back_populates="skill_association")
     skill = relationship("Skill", back_populates="user_association")
-
 
 
 class Experience(BaseModel):
@@ -100,4 +91,3 @@ class UserService(BaseModel):
     service_icon = Column(String(100))
     user_id = Column(Integer, ForeignKey("user.id"))
     user = relationship("User", back_populates="services")
-

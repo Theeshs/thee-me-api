@@ -3,8 +3,9 @@ from typing import List
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from thee_me.handlers.educations.types import EducationCreate, EducationReturn
 from thee_me.models.user import Educations
+
+from .types import EducationCreate
 
 
 async def list_educations(db: Session, user_id: int):

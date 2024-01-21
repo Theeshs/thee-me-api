@@ -1,11 +1,10 @@
-from sqlalchemy import delete, select, func
-from sqlalchemy.orm import Session, selectinload, aliased
+from sqlalchemy import select
+from sqlalchemy.orm import Session, aliased, selectinload
 
-from ...models.user import Experience, Skill, User, UserSkillAssociation, Educations
-from thee_me.handlers.experiences.types import Experience as ExperianceSerializer
-from thee_me.handlers.skills.types import Skill as SkillSerializer
-from thee_me.handlers.skills.types import UserSkill as SkillSerializerV2
-from thee_me.handlers.educations.types import EducationReturn as EducationSerializer
+from ..education.types import EducationReturn as EducationSerializer
+from ..experience.types import Experience as ExperianceSerializer
+from ..models.user import Skill, User, UserSkillAssociation
+from ..skills.types import Skill as SkillSerializer
 from .types import ResponseUser
 from .types import User as UserType
 
@@ -21,7 +20,7 @@ async def save_user(db: Session, user: UserType):
             "email": user.email,
             "github_username": user.github_username,
             "username": user.username,
-            "mobile_number": 81502210
+            "mobile_number": 81502210,
         }
         db_user = User(**user_)
         db.add(db_user)
@@ -58,6 +57,7 @@ async def list_all_users(db: Session):
     users = result.scalars().all()
     return users
 
+
 async def list_user_skills(db: Session, user_id: int):
     stmt = (
         select(Skill, UserSkillAssociation.percentage)
@@ -70,7 +70,10 @@ async def list_user_skills(db: Session, user_id: int):
     if result:
         result = result.scalars().all()
     # skills = [for ]
-    skills = [{"name": skill_obj.name, "percentage": skill_obj.user_association[0].percentage} for skill_obj in result]
+    skills = [
+        {"name": skill_obj.name, "percentage": skill_obj.user_association[0].percentage}
+        for skill_obj in result
+    ]
     return skills
 
 
@@ -102,14 +105,13 @@ async def me(db: Session):
             address_street=result.address_street,
             mobile_number=result.mobile_number,
             nationality=result.nationality,
-            skills=[SkillSerializer.parse_obj(item)
-                    for item in skills if item],
+            skills=[SkillSerializer.parse_obj(item) for item in skills if item],
             experience=[
                 ExperianceSerializer.from_orm(exp) for exp in result.experience if exp
             ],
             education=[
                 EducationSerializer.from_orm(edu) for edu in result.education if edu
-            ]
+            ],
         )
         return me_user
     return None
@@ -119,8 +121,9 @@ async def assign_skill_to_user(db: Session, skill_list: list, user_id: int):
     for skill in skill_list:
         actual_skill = await db.execute(select(Skill).where(Skill.name == skill.name))
         result = actual_skill.scalar_one_or_none()
-        new_record = UserSkillAssociation(user_id=user_id, skill_id=result.id
-                                          , percentage=skill.percentage)
+        new_record = UserSkillAssociation(
+            user_id=user_id, skill_id=result.id, percentage=skill.percentage
+        )
         db.add(new_record)
         await db.commit()
         await db.refresh(new_record)
@@ -140,4 +143,3 @@ async def assign_skill_to_user(db: Session, skill_list: list, user_id: int):
     # print(deleted_rows)
     # await db.execute(UserSkillAssociation.__table__.insert().values(new_skill_records))
     # await db.commit()
-

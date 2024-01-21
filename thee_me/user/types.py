@@ -1,11 +1,12 @@
-from ..skills.types import Skill, UserSkill
 from datetime import date
 from typing import List, Optional
 
 from pydantic import BaseModel, EmailStr, Field
 
-from ..experiences.types import Experience
-from ..educations.types import EducationReturn
+from thee_me.skills.types import Skill, UserSkill
+
+from ..education.types import EducationReturn
+from ..experience.types import Experience
 
 
 class User(BaseModel):

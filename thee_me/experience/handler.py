@@ -1,9 +1,10 @@
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from thee_me.handlers.experiences.types import Experience as ExperienceRequest
-from thee_me.handlers.users.user_handler import get_user
 from thee_me.models.user import Experience
+
+from ..user.handler import get_user
+from .types import Experience as ExperienceRequest
 
 
 async def get_experiences(db: Session, user_id: int):

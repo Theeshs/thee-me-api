@@ -1,9 +1,9 @@
 from sqlalchemy import delete, select
 from sqlalchemy.orm import Session
 
-from ...models.user import Skill
-from ..skills.types import Skill as SkillResponse
-from ..skills.types import SkillCreate
+from ..models.user import Skill
+from .types import Skill as SkillResponse
+from .types import SkillCreate
 
 
 async def list_all_skills(db: Session):

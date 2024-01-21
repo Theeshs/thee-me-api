@@ -5,9 +5,12 @@ from fastapi_jwt_auth import AuthJWT
 from fastapi_jwt_auth.exceptions import AuthJWTException
 from pydantic import BaseModel
 
-from thee_me.routes import education, experiance, skills, user, services
-
 # from thee_me.middlewares.auth_middleware import JWTMiddleware
+from thee_me.user.service import user_router
+from thee_me.skills.service import skills_router
+from thee_me.experience.service import experience_router
+from thee_me.education.service import education_router
+from thee_me.user_services.service import service_router
 
 
 def create_app() -> FastAPI:
@@ -22,27 +25,27 @@ def create_app() -> FastAPI:
     )
 
     app.include_router(
-        user.router,
+        user_router,
         prefix="/api",
     )
 
     app.include_router(
-        skills.router,
+        skills_router,
         prefix="/api",
     )
 
     app.include_router(
-        experiance.router,
+        experience_router,
         prefix="/api",
     )
 
     app.include_router(
-        education.router,
+        education_router,
         prefix="/api",
     )
 
     app.include_router(
-        services.router,
+        service_router,
         prefix="/api"
     )
 
