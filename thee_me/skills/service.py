@@ -1,6 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status
-from fastapi.responses import JSONResponse
-from fastapi_jwt_auth import AuthJWT
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from thee_me.database.connection import get_async_db, get_db
