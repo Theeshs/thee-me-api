@@ -1,16 +1,21 @@
 from sqlalchemy.orm import Session
 from thee_me.projects.types import Project
 from thee_me.user.handler import get_user
-from .hander import list_prjects
+from .hander import get_projects, create_project
 
 
-async def list_projects(email: str, db: Session):
+async def list_all_projects(email: str, db: Session):
     user = await get_user(email=email, db=db)
     if not user:
         raise Exception("User not found")
 
-    return
+    return await get_projects(db=db, user_id=user.id)
 
 
-def create_project(user: str, db: Session, project: Project):
-    return None
+async def save_project(user: str, db: Session, project: Project):
+    user = await get_user(db, user)
+
+    if not user:
+        raise Exception("User not found")
+
+    return create_project(db, project, user.id)

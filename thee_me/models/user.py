@@ -30,7 +30,7 @@ class User(BaseModel):
         overlaps="skill_association",
     )
     services = relationship("UserService", back_populates="user")
-    projects = relationship("UserProjects", back_populates="user")
+    projects = relationship("UserProject", back_populates="user")
 
 
 class Skill(BaseModel):
