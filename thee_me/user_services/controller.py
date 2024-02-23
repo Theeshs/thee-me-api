@@ -22,7 +22,7 @@ async def create_user_service(email: str, service: UserServiceType, db: Session)
     if not user:
         raise Exception("User not found")
 
-    service = create_user_service_handler(db, user, service)
+    service = await create_user_service_handler(db, user, service)
     return service
 
 

@@ -3,10 +3,9 @@ from sqlalchemy.orm import Session
 
 from thee_me.database.connection import get_async_db
 from thee_me.middlewares.auth_middleware import get_current_user
-from thee_me.models.user import UserService
 
 from .controller import create_user_service, get_user_services
-from .types import UserServiceType
+from .types import UserServiceReq, UserServiceType
 
 service_router = APIRouter()
 
@@ -24,7 +23,7 @@ async def get_service(
 async def add_user_service(
     db: Session = Depends(get_async_db),
     current_user: dict = Depends(get_current_user),
-    service: UserServiceType = None,
+    service: UserServiceReq = None,
 ):
     service = await create_user_service(current_user.get("email"), service, db)
     return service

@@ -19,13 +19,9 @@ async def get_user_services(db: Session, user: User = None):
 async def create_user_services(db: Session, user: User, service_dict: UserServiceType):
     if not user:
         raise Exception("User not available")
-
-    new_service = UserService(
-        service_name=service_dict.service_name,
-        service_description=service_dict.service_description,
-        service_icon=service_dict.service_icon,
-        user_id=user,
-    )
+    service_dict = service_dict.dict()
+    service_dict["user_id"] = user.id
+    new_service = UserService(**service_dict)
 
     db.add(new_service)
 

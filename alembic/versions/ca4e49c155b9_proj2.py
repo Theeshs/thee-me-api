@@ -1,8 +1,8 @@
-"""updating user model for skills
+"""proj2
 
-Revision ID: d39239304412
-Revises: f3e6d9345c7d
-Create Date: 2023-11-18 20:30:11.706425
+Revision ID: ca4e49c155b9
+Revises: 474d7259ab7d
+Create Date: 2024-02-10 15:03:30.303779
 
 """
 import sqlalchemy as sa
@@ -10,8 +10,8 @@ import sqlalchemy as sa
 from alembic import op
 
 # revision identifiers, used by Alembic.
-revision = "d39239304412"
-down_revision = "f3e6d9345c7d"
+revision = "ca4e49c155b9"
+down_revision = "474d7259ab7d"
 branch_labels = None
 depends_on = None
 

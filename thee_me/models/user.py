@@ -30,6 +30,7 @@ class User(BaseModel):
         overlaps="skill_association",
     )
     services = relationship("UserService", back_populates="user")
+    projects = relationship("UserProject", back_populates="user")
 
 
 class Skill(BaseModel):
@@ -91,3 +92,15 @@ class UserService(BaseModel):
     service_icon = Column(String(100))
     user_id = Column(Integer, ForeignKey("user.id"))
     user = relationship("User", back_populates="services")
+
+
+class UserProject(BaseModel):
+    __tablename__ = "user_projects"
+    project_name = Column(String(200), nullable=False)
+    user_id = Column(Integer, ForeignKey("user.id"))
+    user = relationship("User", back_populates="projects")
+    description = Column(String(1000), nullable=True)
+    from_date = Column(DateTime)
+    to_date = Column(DateTime)
+    project_link = Column(String(200))
+    technologies = Column(String(1000))
