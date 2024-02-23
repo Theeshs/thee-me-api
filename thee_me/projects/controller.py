@@ -1,7 +1,9 @@
 from sqlalchemy.orm import Session
+
 from thee_me.projects.types import Project
 from thee_me.user.handler import get_user
-from .hander import get_projects, create_project
+
+from .hander import create_project, get_projects
 
 
 async def list_all_projects(email: str, db: Session):
