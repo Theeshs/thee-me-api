@@ -15,9 +15,9 @@ async def list_projects(db: Session = Depends(get_async_db), current_user: dict 
 
 
 @project_router.post("/project-create")
-def create_project(
+async def create_project(
     db: Session = Depends(get_async_db),
     project: Project = None,
     current_user: dict = Depends(get_current_user),
 ):
-    return save_project(current_user.get("email"), db, project)
+    return await save_project(current_user.get("email"), db, project)

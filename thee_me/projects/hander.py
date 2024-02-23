@@ -9,15 +9,11 @@ async def get_projects(db: Session, user_id: int) -> List[Project]:
     return projects
 
 async def create_project(db: Session, project_data: Project, user_id: int):
-    new_project = UserProject(
-        name=project_data.name,
-        description=project_data.description,
-        from_date=project_data.from_date,
-        to_date=project_data.to_date,
-        project_link=project_data.project_link,
-        technologies=project_data.technologies,
-        user_id=user_id
-    )
+    project = project_data.dict()
+    name = project.pop("name")
+    project["project_name"] = name
+    project["user_id"] = user_id
+    new_project = UserProject(**project)
     db.add(new_project)
     await db.commit()
     await db.refresh(new_project)

@@ -10,7 +10,7 @@ class Project(BaseModel):
     from_date: Optional[date] = None
     to_date: Optional[date] = None
     project_link: Optional[str] = None
-    technologies: Optional[List[str]] = None
+    technologies: Optional[str] = None
 
     class Config:
         orm_mode = True

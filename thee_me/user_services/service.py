@@ -22,9 +22,9 @@ async def get_service(
 
 @service_router.post("/services")
 async def add_user_service(
-    db: Session = Depends(get_async_db),
-    current_user: dict = Depends(get_current_user),
     service: UserServiceType = None,
+    db: Session = Depends(get_async_db),
+    current_user: dict = Depends(get_current_user)
 ):
     service = await create_user_service(current_user.get("email"), service, db)
     return service

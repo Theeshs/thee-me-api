@@ -18,4 +18,4 @@ async def save_project(user: str, db: Session, project: Project):
     if not user:
         raise Exception("User not found")
 
-    return create_project(db, project, user.id)
+    return await create_project(db, project, user.id)
