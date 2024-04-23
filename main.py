@@ -13,10 +13,11 @@ from thee_me.skills.service import skills_router
 # from thee_me.middlewares.auth_middleware import JWTMiddleware
 from thee_me.user.service import user_router
 from thee_me.user_services.service import service_router
+from thee_me.contact_me.service import contact_router
 
 
 def create_app() -> FastAPI:
-    app = FastAPI()
+    app: FastAPI = FastAPI()
     origins = ["*"]
     app.add_middleware(
         CORSMiddleware,
@@ -49,6 +50,8 @@ def create_app() -> FastAPI:
     app.include_router(service_router, prefix="/api")
 
     app.include_router(project_router, prefix="/api")
+
+    app.include_router(contact_router, prefix="/api")
 
     return app
 
