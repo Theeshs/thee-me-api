@@ -13,10 +13,6 @@ sudo mv env .env
 
 echo "removing old deployment docker"
 sudo docker stop $(docker ps -a -q)
-sudo docker rm $(docker ps -a -q)
-
-echo "removing old docker image"
-sudo docker rmi $(docker images -q)
 
 echo "pruning docker system"
 sudo docker system prune -a -y
