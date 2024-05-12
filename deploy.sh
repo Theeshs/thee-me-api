@@ -21,7 +21,7 @@ docker rmi $(docker images -q)
 docker system prune -a
 
 echo "starting service"
-sudo docker-compose up
+sudo docker compose up
 
 #if ! command -v nginx > /dev/null; then
 #  echo "nginx is not installed"
