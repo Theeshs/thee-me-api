@@ -63,7 +63,7 @@ jobs:
           EC2_HOST: ${{ secrets.EC2_HOST }}
           EC2_USER_NAME: ${{ secrets.EC2_USER_NAME }}
         run: |
-          ssh -o StrictHostKeyChecking=no $EC2_USER_NAME@$EC2_HOST "chmod +x ./deploy.sh && ./deploy.sh"
+          ssh -o StrictHostKeyChecking=no $EC2_USER_NAME@$EC2_HOST "chmod +x ./thee-api/deploy.sh && ./thee-api/deploy.sh"
 
       - name: Clean up
         if: always()
