@@ -32,23 +32,36 @@ jobs:
           echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> env
           echo "DATABASE=${{ secrets.DATABASE }}" >> env
           echo "EMAIL_ACCESS_KEY=${{ secrets.EMAIL_ACCESS_KEY }}" >> env
-          echo "EMAIL_SENDER_ADDRES=${{ secrets.EMAIL_SENDER_ADDRES }}" >> env
+          echo "EMAIL_SENDER_ADDRESS=${{ secrets.EMAIL_SENDER_ADDRESS }}" >> env
           echo "THEE_CONTACT_EMAIL=${{ secrets.THEE_CONTACT_EMAIL }}" >> env
           ls -la
+
+      - name: Delete Existing Contents in folder
+        env:
+          EC2_HOST: ${{ secrets.EC2_HOST }}
+          EC2_USERNAME: ${{ secrets.EC2_USER_NAME }}
+        run: |
+          ssh $EC2_USER_NAME@$EC2_HOST "sudo rm -rf /home/ubuntu/thee-api"
+      
+
+      - name: Create the folder again
+        env:
+          EC2_HOST: ${{ secrets.EC2_HOST }}
+          EC2_USERNAME: ${{ secrets.EC2_USER_NAME }}
+        run: |
+          ssh $EC2_USER_NAME@$EC2_HOST "sudo mkdir /home/ubuntu/thee-api"
 
       - name: Copy files to remote server
         env:
           EC2_HOST: ${{ secrets.EC2_HOST }}
           EC2_USERNAME: ${{ secrets.EC2_USER_NAME }}
         run: |
-            ssh $EC2_USER_NAME@$EC2_HOST "sudo rm -rf /home/ubuntu/thee-api"
-            ssh $EC2_USER_NAME@$EC2_HOST "sudo mkdir /home/ubuntu/thee-api"
             scp -r * $EC2_USER_NAME@$EC2_HOST:/home/ubuntu/
 
       - name: Run bash script to deploy
         env:
-          EC_HOST: ${{ secrets.EC2_HOST }}
-          EC2_USERNAME: ${{ secrets.EC2_USER_NAME }}
+          EC2_HOST: ${{ secrets.EC2_HOST }}
+          EC2_USER_NAME: ${{ secrets.EC2_USER_NAME }}
         run: |
           ssh -o StrictHostKeyChecking=no $EC2_USER_NAME@$EC2_HOST "chmod +x ./deploy.sh && ./deploy.sh"
 
