@@ -2,16 +2,16 @@
 sudo mv env .env
 
 echo "deleting old deployment"
-sudo rm -rf /var/www/thee-protfolio
+sudo rm -rf ./thee-portfolio
 
 echo "creating app folder again"
-sudo mkdir /var/www/thee-protfolio
+sudo mkdir ./thee-protfolio
 
 echo "moving files to app folder"
-sudo mv * /var/www/thee-protfolio
+sudo mv * ./thee-protfolio
 
 echo "moving env file"
-cd var/www/thee-protfolio
+cd ./thee-protfolio
 
 echo "removing old deployment docker"
 sudo docker stop $(docker ps -a -q)
