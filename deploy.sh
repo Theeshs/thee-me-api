@@ -12,14 +12,14 @@ cd var/www/thee-protfolio/
 sudo mv env .env
 
 echo "removing old deployment docker"
-docker stop $(docker ps -a -q)
-docker rm $(docker ps -a -q)
+sudo docker stop $(docker ps -a -q)
+sudo docker rm $(docker ps -a -q)
 
 echo "removing old docker image"
-docker rmi $(docker images -q)
+sudo docker rmi $(docker images -q)
 
 echo "pruning docker system"
-docker system prune -a -y
+sudo docker system prune -a -y
 
 echo "starting service"
 sudo docker compose up
