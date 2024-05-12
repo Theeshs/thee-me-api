@@ -1,8 +1,9 @@
 #!/bin/bash
+echo "creating www"
+sudo mkdir /var/www
 
 echo "deleting old deployment"
-sudo rm -rf /var/www/
-sudo mkdir /var/www/
+sudo rm -rf /var/www/thee-protfolio
 
 echo "creating app folder again"
 sudo mkdir /var/www/thee-protfolio

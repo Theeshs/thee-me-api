@@ -54,7 +54,7 @@ jobs:
       - name: Copy files to remote server
         env:
           EC2_HOST: ${{ secrets.EC2_HOST }}
-          EC2_USERNAME: ${{ secrets.EC2_USER_NAME }}
+          EC2_USER_NAME: ${{ secrets.EC2_USER_NAME }}
         run: |
             scp -r * $EC2_USER_NAME@$EC2_HOST:/home/ubuntu/thee-api
 
