@@ -22,7 +22,7 @@ jobs:
       - name: Create .env file dynamically
         env:
           ENV: ${{ secrets.ENV }}
-          EC2_USERNAME: ${{ secrets.EC2_USERNAME }}
+          EC2_USERNAME: ${{ secrets.EC2_USER_NAME }}
         run: |
           echo "ENV=$ENV" >> env
           echo "EC2_USERNAME=${EC2_USERNAME}" >> env
@@ -31,14 +31,14 @@ jobs:
       - name: Copy files to remote server
         env:
           EC_HOST: ${{ secrets.EC2_HOST }}
-          EC2_USERNAME: ${{ secrets.EC2_USERNAME }}
+          EC2_USERNAME: ${{ secrets.EC2_USER_NAME }}
         run: |
             scp -r * $EC2_USERNAME@$EC_HOST:/home/ubuntu/
 
       - name: Run bash script to deploy
         env:
           EC_HOST: ${{ secrets.EC2_HOST }}
-          EC2_USERNAME: ${{ secrets.EC2_USERNAME }}
+          EC2_USERNAME: ${{ secrets.EC2_USER_NAME }}
         run: |
           ssh -o StrictHostKeyChecking=no $EC2_USERNAME@$EC_HOST "chmod +x ./deploy.sh && ./deploy.sh"
 
