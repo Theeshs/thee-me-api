@@ -36,27 +36,27 @@ jobs:
           echo "THEE_CONTACT_EMAIL=${{ secrets.THEE_CONTACT_EMAIL }}" >> env
           ls -la
 
-      - name: Delete Existing Contents in folder
-        env:
-          EC2_HOST: ${{ secrets.EC2_HOST }}
-          EC2_USERNAME: ${{ secrets.EC2_USER_NAME }}
-        run: |
-          ssh $EC2_USER_NAME@$EC2_HOST "sudo rm -rf /home/ubuntu/thee-api"
-      
-
-      - name: Create the folder again
-        env:
-          EC2_HOST: ${{ secrets.EC2_HOST }}
-          EC2_USERNAME: ${{ secrets.EC2_USER_NAME }}
-        run: |
-          ssh $EC2_USER_NAME@$EC2_HOST "sudo mkdir /home/ubuntu/thee-api"
+#      - name: Delete Existing Contents in folder
+#        env:
+#          EC2_HOST: ${{ secrets.EC2_HOST }}
+#          EC2_USERNAME: ${{ secrets.EC2_USER_NAME }}
+#        run: |
+#          ssh $EC2_USER_NAME@$EC2_HOST "sudo rm -rf /home/ubuntu/thee-api"
+#
+#
+#      - name: Create the folder again
+#        env:
+#          EC2_HOST: ${{ secrets.EC2_HOST }}
+#          EC2_USERNAME: ${{ secrets.EC2_USER_NAME }}
+#        run: |
+#          ssh $EC2_USER_NAME@$EC2_HOST "sudo mkdir /home/ubuntu/thee-api"
 
       - name: Copy files to remote server
         env:
           EC2_HOST: ${{ secrets.EC2_HOST }}
           EC2_USERNAME: ${{ secrets.EC2_USER_NAME }}
         run: |
-            scp -r * $EC2_USER_NAME@$EC2_HOST:/home/ubuntu/
+            scp -r * $EC2_USER_NAME@$EC2_HOST:/home/ubuntu/thee-api
 
       - name: Run bash script to deploy
         env:
