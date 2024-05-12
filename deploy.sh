@@ -1,6 +1,6 @@
 #!/bin/bash
 echo "removing old deployment docker"
-yes | sudo docker stop $(docker ps -a -q)
+sudo docker stop TheeMeAPI
 
 echo "pruning docker system"
 yes | sudo docker system prune -a
