@@ -41,9 +41,9 @@ jobs:
           EC_HOST: ${{ secrets.EC2_HOST }}
           EC2_USERNAME: ${{ secrets.EC2_USER_NAME }}
         run: |
-            ssh $EC2_USER_NAME@$EC_HOST "rm -rf /home/ubuntu/thee-api"
-            ssh $EC2_USER_NAME@$EC_HOST "mkdir /home/ubuntu/thee-api"
-            scp -r * $EC2_USER_NAME@$EC_HOST:/home/ubuntu/
+            ssh $EC2_USER_NAME@$EC2_HOST "sudo rm -rf /home/ubuntu/thee-api"
+            ssh $EC2_USER_NAME@$EC2_HOST "sudo mkdir /home/ubuntu/thee-api"
+            scp -r * $EC2_USER_NAME@$EC2_HOST:/home/ubuntu/
 
       - name: Run bash script to deploy
         env:
