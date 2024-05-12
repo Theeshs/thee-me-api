@@ -12,10 +12,10 @@ echo "creating app folder again"
 sudo mkdir ./thee-protfolio
 
 echo "moving files to app folder"
-sudo mv * ./thee-protfolio
+sudo mv * ./thee-portfolio
 
 echo "moving env file"
-cd ./thee-protfolio
+cd ./thee-portfolio
 sudo mv env .env
 
 echo "starting service"
