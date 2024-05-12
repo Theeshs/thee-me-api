@@ -26,6 +26,14 @@ jobs:
         run: |
           echo "ENV=$ENV" >> env
           echo "EC2_USERNAME=${EC2_USERNAME}" >> env
+          echo "DB_HOST=${{ secrets.EC2_HOST }}" >> env
+          echo "DB_PORT=${{ secrets.DB_PORT }}" >> env
+          echo "DB_USER=${{ secrets.DB_USER }}" >> env
+          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> env
+          echo "DATABASE=${{ secrets.DATABASE }}" >> env
+          echo "EMAIL_ACCESS_KEY=${{ secrets.EMAIL_ACCESS_KEY }}" >> env
+          echo "EMAIL_SENDER_ADDRES=${{ secrets.EMAIL_SENDER_ADDRES }}" >> env
+          echo "THEE_CONTACT_EMAIL=${{ secrets.THEE_CONTACT_EMAIL }}" >> env
           ls -la
 
       - name: Copy files to remote server
