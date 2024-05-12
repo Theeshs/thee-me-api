@@ -1,5 +1,6 @@
 """experience apis"""
 from fastapi import APIRouter, Depends
+from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 
 from thee_me.database.connection import get_async_db
@@ -28,3 +29,12 @@ async def list_user_experiences(
 ):
     """listing user experiences"""
     return await list_experiences(db, current_user["id"])
+
+
+@experience_router.get("/resume")
+async def resume_download():
+    """download resume"""
+    return FileResponse(
+        "thee_me/file_store/Theekshana_Sandaru_-_Full_Stack_Engineer__Senior_Backend_Engineer (4).pdf",
+        filename="TheeResume.pdf",
+    )

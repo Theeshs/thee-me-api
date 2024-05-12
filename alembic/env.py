@@ -4,11 +4,17 @@ from sqlalchemy import engine_from_config, pool
 
 from alembic import context
 from thee_me.database.connection import Base
+import os
 from thee_me.models.user import *
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
+print("we are here")
+print(config)
+url = (f"postgresql://{os.environ.get('DB_USER')}:{os.environ.get('DB_PASSWORD')}@{os.environ.get('DB_HOST')}:"
+           f"{os.environ.get('DB_PORT')}/{os.environ.get('DATABASE')}")
+config.set_main_option("sqlalchemy.url", url)
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
@@ -39,7 +45,9 @@ def run_migrations_offline() -> None:
     script output.
 
     """
+    # url = config.get_main_option("sqlalchemy.url")
     url = config.get_main_option("sqlalchemy.url")
+    print(url)
     context.configure(
         url=url,
         target_metadata=target_metadata,

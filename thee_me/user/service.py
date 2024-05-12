@@ -8,8 +8,9 @@ from sqlalchemy.orm import Session
 
 from thee_me.database.connection import get_async_db
 
-from .controller import create_user, list_users, login_user, thee_me, user_skill_add
+from .controller import create_user, list_users, login_user, thee_me, user_skill_add, user_repos
 from .types import Credentials, User, UserSkillAssignment
+from thee_me.crons.github_sync import sync_github_repositories
 
 user_router = APIRouter()
 
@@ -50,3 +51,15 @@ async def user_skill(
     user_id: int, skill_data: UserSkillAssignment, db: Session = Depends(get_async_db)
 ):
     return await user_skill_add(db, user_id, skill_data.skills)
+
+
+@user_router.get("/user/sync_repositories")
+async def git_sync(db: Session = Depends(get_async_db)):
+    await sync_github_repositories("thee", db)
+    return {"status": "success"}
+
+
+@user_router.get("/user/git_repositories")
+async def git_repositories(db: Session = Depends(get_async_db)):
+    repos = await user_repos("theekshana.sandaru@gmail.com", db)
+    return repos

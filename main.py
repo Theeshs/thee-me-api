@@ -14,6 +14,7 @@ from thee_me.skills.service import skills_router
 from thee_me.user.service import user_router
 from thee_me.user_services.service import service_router
 from thee_me.contact_me.service import contact_router
+from thee_me.crons import github_sync
 
 
 def create_app() -> FastAPI:

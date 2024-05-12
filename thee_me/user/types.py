@@ -7,6 +7,7 @@ from thee_me.skills.types import Skill, UserSkill
 
 from ..education.types import EducationReturn
 from ..experience.types import Experience
+from ..user_services.types import UserServiceType
 
 
 class User(BaseModel):
@@ -46,6 +47,7 @@ class ResponseUser(BaseModel):
     skills: Optional[List[Skill]] = []
     experience: Optional[List[Experience]]
     education: Optional[List[EducationReturn]]
+    user_services: Optional[list]
 
     class Config:
         orm_mode = True

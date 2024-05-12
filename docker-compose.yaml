@@ -1,0 +1,27 @@
+version: '3.10'
+services:
+  web:
+    build:
+        context: .
+        dockerfile: Dockerfile
+    container_name: TheeMeAPI
+    command: sh -c "alembic upgrade head && uvicorn main:app --host 0.0.0.0 --port 8000"
+    volumes:
+      - .:/app
+    ports:
+      - 8000:8000
+#    depends_on:
+#      - db
+#    environment:
+#      - DB_HOST=db
+#      - DB_PORT=5432
+#      - DB_USER=postgres
+#      - DB_PASSWORD=mysecretpassword
+#      - DATABASE=thee.me
+#  db:
+#    image: postgres:13
+#    restart: always
+#    environment:
+#      POSTGRES_USER: postgres
+#      POSTGRES_PASSWORD: mysecretpassword
+#      POSTGRES_DB: thee.me

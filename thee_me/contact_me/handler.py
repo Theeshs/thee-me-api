@@ -2,13 +2,23 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
+from sqlalchemy.orm import Session
 
-async def send_email(from_addr, to_addr=None, subject=None, body=None, password=None):
+from thee_me.contact_me.types import MessageRequest
+from thee_me.models.user import Emails
+
+
+async def send_email(
+    from_addr, to_addr=None, subject=None, body=None, password=None, cc=None
+):
     try:
         msg = MIMEMultipart("alternative")
         msg["From"] = from_addr
         msg["To"] = to_addr
         msg["Subject"] = subject
+        if cc:
+            msg["CC"] = cc
+            msg["BCC"] = cc
 
         # Turn these into plain MIMEText objects
         part1 = MIMEText(body, "plain")
@@ -31,3 +41,12 @@ async def send_email(from_addr, to_addr=None, subject=None, body=None, password=
     except Exception as e:
         print(e)
         return False
+
+
+async def save_email_data(db: Session, email_request: MessageRequest) -> Emails:
+    """Save email data to database"""
+    new_email = Emails(**email_request.dict())
+    db.add(new_email)
+    await db.commit()
+    await db.refresh(new_email)
+    return new_email

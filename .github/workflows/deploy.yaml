@@ -1,0 +1,39 @@
+jobs:
+  deploy:
+    steps:
+      - name: Checkout to master
+        uses: actions/checkout@v2
+
+      - name: setup sshkey whitelist Ec2 IP address
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Create .env file dynamically
+        env:
+          ENV: ${{ secrets.ENV }}
+          EC2_USERNAME: ${{ secrets.EC2_USERNAME }}
+        run: |
+          echo "ENV=$ENV" >> env
+          echo "EC2_USERNAME=${EC2_USERNAME}" >> env
+          ls -la
+
+      - name: Copy files to remote server
+        env:
+          EC_HOST: ${{ secrets.EC2_HOST }}
+          EC2_USERNAME: ${{ secrets.EC2_USERNAME }}
+          run: |
+            scp -r * $EC2_USERNAME@$EC_HOST:/home/ubuntu/
+
+      - name: Run bash script to deploy
+        env:
+          EC_HOST: ${{ secrets.EC2_HOST }}
+          EC2_USERNAME: ${{ secrets.EC2_USERNAME }}
+        run: |
+          ssh -o StrictHostKeyChecking=no $EC2_USERNAME@$EC_HOST "chmod +x ./deploy.sh && ./deploy.sh"
+
+      - name: Clean up
+        if: always()
+        run: rm -rf ~/.ssh/id_rsa

@@ -1,14 +1,25 @@
+import os
+
+from dotenv import load_dotenv
 from sqlalchemy import create_engine, engine
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
+# Load .env file
+load_dotenv()
+
+# Now you can access the variables
+database_url = os.getenv("DATABASE_URL")
+
 SQLALCHEMY_DATABASE_URL = (
-    "postgresql://postgres:mysecretpassword@127.0.0.1:5432/thee.me"
+    f"postgresql://{os.environ.get('DB_USER')}:{os.environ.get('DB_PASSWORD')}@{os.environ.get('DB_HOST')}:"
+    f"{os.environ.get('DB_PORT')}/{os.environ.get('DATABASE')}"
 )
 
 SQLALCHEMY_DATABASE_URL_ASYNC = (
-    "postgresql+asyncpg://postgres:mysecretpassword@127.0.0.1:5432/thee.me"
+    f"postgresql+asyncpg://{os.environ.get('DB_USER')}:{os.environ.get('DB_PASSWORD')}@{os.environ.get('DB_HOST')}:"
+    f"{os.environ.get('DB_PORT')}/{os.environ.get('DATABASE')}"
 )
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL, echo=True, future=True)
@@ -34,6 +45,7 @@ def get_db():
 async def get_async_db():
     try:
         async with async_session() as db:
+            print("Connected to database")
             yield db
     except Exception as e:
         print(e)

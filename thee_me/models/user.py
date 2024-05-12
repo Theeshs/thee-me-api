@@ -31,6 +31,7 @@ class User(BaseModel):
     )
     services = relationship("UserService", back_populates="user")
     projects = relationship("UserProject", back_populates="user")
+    repositories = relationship("Repositories", back_populates="user")
 
 
 class Skill(BaseModel):
@@ -104,3 +105,25 @@ class UserProject(BaseModel):
     to_date = Column(DateTime)
     project_link = Column(String(200))
     technologies = Column(String(1000))
+
+
+class Emails(BaseModel):
+    __tablename__ = "emails"
+    call_back_email = Column(String(150), nullable=False)
+    message = Column(Text, nullable=True)
+    name = Column(String(150), nullable=False)
+    subject = Column(String(150), nullable=False)
+
+
+class Repositories(BaseModel):
+    __tablename__ = "repositories"
+    repo_name = Column(String(150), nullable=False)
+    repo_description = Column(Text, nullable=True)
+    repo_url = Column(String(150), nullable=False)
+    repo_language = Column(String(150))
+    repo_created_at = Column(DateTime, nullable=False)
+    repo_updated_at = Column(DateTime, nullable=False)
+    user_id = Column(Integer, ForeignKey("user.id"))
+    user = relationship("User", back_populates="repositories")
+    show_on_profile = Column(Boolean, nullable=False)
+    order = Column(Integer, nullable=False)

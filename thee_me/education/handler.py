@@ -9,7 +9,11 @@ from .types import EducationCreate
 
 
 async def list_educations(db: Session, user_id: int):
-    result = await db.execute(select(Educations).where(Educations.user_id == user_id))
+    result = await db.execute(
+        select(Educations)
+        .where(Educations.user_id == user_id)
+        .order_by(Educations.id.desc())
+    )
     educations = result.scalars().all()
     return educations
 

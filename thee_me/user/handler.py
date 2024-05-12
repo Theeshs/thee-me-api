@@ -1,9 +1,15 @@
-from sqlalchemy import select
+from __future__ import annotations
+
+from sqlalchemy import asc, desc, select
 from sqlalchemy.orm import Session, aliased, selectinload
+
+from thee_me.education.handler import list_educations
+from thee_me.user_services.handler import get_user_services
+from thee_me.user_services.types import UserServiceType as UserServiceTypeSerializer
 
 from ..education.types import EducationReturn as EducationSerializer
 from ..experience.types import Experience as ExperianceSerializer
-from ..models.user import Skill, User, UserSkillAssociation
+from ..models.user import Educations, Experience, Skill, User, UserSkillAssociation, Repositories
 from ..skills.types import Skill as SkillSerializer
 from .types import ResponseUser
 from .types import User as UserType
@@ -79,42 +85,38 @@ async def list_user_skills(db: Session, user_id: int):
 
 async def me(db: Session):
     print("me")
-    stmt = (
-        select(User, Skill)
-        .select_from(User)
-        .options(selectinload(User.experience))
-        .options(selectinload(User.education))
-        .where(User.email == "theekshana.sandaru@gmail.com")
-        .limit(1)
+    user = await get_user(db, "theekshana.sandaru@gmail.com")
+    educations = await list_educations(db, user.id)
+    experiences = await db.execute(
+        select(Experience)
+        .where(Experience.user_id == user.id)
+        .order_by(desc(Experience.start_date))
+    )
+    experiences = experiences.scalars().all()
+    skills = await list_user_skills(db, user.id)
+    user_services_ = await get_user_services(db, user)
+    print(user_services_)
+
+    me_user = ResponseUser(
+        first_name=user.first_name,
+        last_name=user.last_name,
+        dob=user.dob,
+        username=user.username,
+        email=user.email,
+        github_username=user.github_username,
+        description=user.description,
+        recidential_country=user.recidential_country,
+        address_block=user.address_block,
+        address_street=user.address_street,
+        mobile_number=user.mobile_number,
+        nationality=user.nationality,
+        skills=[SkillSerializer.parse_obj(item) for item in skills if item],
+        experience=[ExperianceSerializer.from_orm(exp) for exp in experiences if exp],
+        education=[EducationSerializer.from_orm(edu) for edu in educations if edu],
+        user_services=[service for service in user_services_ if service],
     )
 
-    result = await db.execute(stmt)
-    if result:
-        result = result.scalar_one_or_none()
-        skills = await list_user_skills(db, result.id)
-        me_user = ResponseUser(
-            first_name=result.first_name,
-            last_name=result.last_name,
-            dob=result.dob,
-            username=result.username,
-            email=result.email,
-            github_username=result.github_username,
-            description=result.description,
-            recidential_country=result.recidential_country,
-            address_block=result.address_block,
-            address_street=result.address_street,
-            mobile_number=result.mobile_number,
-            nationality=result.nationality,
-            skills=[SkillSerializer.parse_obj(item) for item in skills if item],
-            experience=[
-                ExperianceSerializer.from_orm(exp) for exp in result.experience if exp
-            ],
-            education=[
-                EducationSerializer.from_orm(edu) for edu in result.education if edu
-            ],
-        )
-        return me_user
-    return None
+    return me_user
 
 
 async def assign_skill_to_user(db: Session, skill_list: list, user_id: int):
@@ -128,18 +130,9 @@ async def assign_skill_to_user(db: Session, skill_list: list, user_id: int):
         await db.commit()
         await db.refresh(new_record)
         return new_record
-    # result = await db.execute(select(Skill).where(Skill.name.in_(skill_list)))
-    # skill = result.scalar_one_or_none()
-    # skills = [skill.id for skill in result.scalars().all() if skill]
-    # new_skill_records = []
-    # for skill in skills:
-    #     new_skill_records.append({"skill_id": skill, "user_id": user_id})
-    # delete_statement = delete(UserSkillAssociation).where(
-    #     UserSkillAssociation.user_id == user_id
-    # )
-    # result = await db.execute(delete_statement)
-    # deleted_rows = result.rowcount
-    # await db.commit()
-    # print(deleted_rows)
-    # await db.execute(UserSkillAssociation.__table__.insert().values(new_skill_records))
-    # await db.commit()
+
+
+async def get_user_repositories(db: Session, user_id: str):
+    result = await db.execute(select(Repositories).where(Repositories.user_id == user_id).order_by(desc(Repositories.repo_created_at)))
+    repositories = result.scalars().all()
+    return repositories
