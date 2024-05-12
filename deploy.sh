@@ -1,6 +1,6 @@
 #!/bin/bash
 echo "removing old deployment docker"
-sudo docker stop $(docker ps -a -q)
+yes | sudo docker stop $(docker ps -a -q)
 
 echo "pruning docker system"
 yes | sudo docker system prune -a
