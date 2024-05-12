@@ -9,7 +9,7 @@ echo "deleting old deployment"
 sudo rm -rf ./thee-portfolio
 
 echo "creating app folder again"
-sudo mkdir ./thee-protfolio
+sudo mkdir ./thee-portfolio
 
 echo "moving files to app folder"
 sudo mv * ./thee-portfolio
@@ -19,7 +19,7 @@ cd ./thee-portfolio
 sudo mv env .env
 
 echo "starting service"
-sudo docker compose up
+sudo docker compose up -d
 exit 0
 
 #if ! command -v nginx > /dev/null; then
