@@ -1,4 +1,6 @@
 #!/bin/bash
+sudo mv env .env
+
 echo "deleting old deployment"
 sudo rm -rf /var/www/thee-protfolio
 
@@ -10,7 +12,6 @@ sudo mv * /var/www/thee-protfolio
 
 echo "moving env file"
 cd var/www/thee-protfolio
-sudo mv env .env
 
 echo "removing old deployment docker"
 sudo docker stop $(docker ps -a -q)
