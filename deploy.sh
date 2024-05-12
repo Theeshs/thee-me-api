@@ -1,4 +1,10 @@
 #!/bin/bash
+echo "removing old deployment docker"
+sudo docker stop $(docker ps -a -q)
+
+echo "pruning docker system"
+yes | sudo docker system prune -a
+
 echo "deleting old deployment"
 sudo rm -rf ./thee-portfolio
 
@@ -11,12 +17,6 @@ sudo mv * ./thee-protfolio
 echo "moving env file"
 cd ./thee-protfolio
 sudo mv env .env
-
-echo "removing old deployment docker"
-sudo docker stop $(docker ps -a -q)
-
-echo "pruning docker system"
-yes | sudo docker system prune -a
 
 echo "starting service"
 sudo docker compose up
