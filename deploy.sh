@@ -2,6 +2,7 @@
 
 echo "deleting old deployment"
 sudo rm -rf /var/www/
+sudo mkdir /var/www/
 
 echo "creating app folder again"
 sudo mkdir /var/www/thee-protfolio
