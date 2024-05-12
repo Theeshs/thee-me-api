@@ -8,14 +8,15 @@ sudo mkdir /var/www/thee-protfolio
 echo "moving files to app folder"
 sudo mv * /var/www/thee-protfolio
 
-cd var/www/thee-protfolio/
+echo "moving env file"
+cd var/www/thee-protfolio
 sudo mv env .env
 
 echo "removing old deployment docker"
 sudo docker stop $(docker ps -a -q)
 
 echo "pruning docker system"
-sudo docker system prune -a -y
+yes | sudo docker system prune -a
 
 echo "starting service"
 sudo docker compose up
