@@ -20,6 +20,7 @@ yes | sudo docker system prune -a
 
 echo "starting service"
 sudo docker compose up
+exit 0
 
 #if ! command -v nginx > /dev/null; then
 #  echo "nginx is not installed"
