@@ -1,7 +1,4 @@
 #!/bin/bash
-echo "creating www"
-sudo mkdir /var/www
-
 echo "deleting old deployment"
 sudo rm -rf /var/www/thee-protfolio
 
@@ -20,7 +17,9 @@ docker rm $(docker ps -a -q)
 
 echo "removing old docker image"
 docker rmi $(docker images -q)
-docker system prune -a
+
+echo "pruning docker system"
+docker system prune -a -y
 
 echo "starting service"
 sudo docker compose up
