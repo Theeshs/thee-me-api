@@ -84,7 +84,6 @@ async def list_user_skills(db: Session, user_id: int):
 
 
 async def me(db: Session):
-    print("me")
     user = await get_user(db, "theekshana.sandaru@gmail.com")
     educations = await list_educations(db, user.id)
     experiences = await db.execute(
