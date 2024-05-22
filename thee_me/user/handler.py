@@ -9,10 +9,33 @@ from thee_me.user_services.types import UserServiceType as UserServiceTypeSerial
 
 from ..education.types import EducationReturn as EducationSerializer
 from ..experience.types import Experience as ExperianceSerializer
-from ..models.user import Educations, Experience, Skill, User, UserSkillAssociation, Repositories
+from ..models.user import (
+    Educations,
+    Experience,
+    Repositories,
+    Skill,
+    User,
+    UserSkillAssociation,
+)
 from ..skills.types import Skill as SkillSerializer
 from .types import ResponseUser
 from .types import User as UserType
+
+
+async def get_user_repositories(db: Session, user: str, limit: int = None, tech: str = None):
+    query = (
+        select(Repositories)
+        .where(Repositories.user == user)
+        .order_by(desc(Repositories.repo_created_at))
+    )
+
+    if tech:
+        query = query.where(Repositories.repo_language == tech)
+    if limit is not None:
+        query = query.limit(limit)
+    result = await db.execute(query.distinct())
+    repositories = result.scalars().all()
+    return repositories
 
 
 async def save_user(db: Session, user: UserType):
@@ -94,7 +117,7 @@ async def me(db: Session):
     experiences = experiences.scalars().all()
     skills = await list_user_skills(db, user.id)
     user_services_ = await get_user_services(db, user)
-    print(user_services_)
+    repositories = await get_user_repositories(db, user, 5, None)
 
     me_user = ResponseUser(
         first_name=user.first_name,
@@ -113,6 +136,7 @@ async def me(db: Session):
         experience=[ExperianceSerializer.from_orm(exp) for exp in experiences if exp],
         education=[EducationSerializer.from_orm(edu) for edu in educations if edu],
         user_services=[service for service in user_services_ if service],
+        repositories=[repo for repo in repositories if repo],
     )
 
     return me_user
@@ -129,9 +153,3 @@ async def assign_skill_to_user(db: Session, skill_list: list, user_id: int):
         await db.commit()
         await db.refresh(new_record)
         return new_record
-
-
-async def get_user_repositories(db: Session, user_id: str):
-    result = await db.execute(select(Repositories).where(Repositories.user_id == user_id).order_by(desc(Repositories.repo_created_at)))
-    repositories = result.scalars().all()
-    return repositories

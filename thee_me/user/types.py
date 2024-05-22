@@ -53,10 +53,5 @@ class ResponseUser(BaseModel):
         orm_mode = True
 
 
-class UserSkill(BaseModel):
-    name: str
-    percentage: int
-
-
 class UserSkillAssignment(BaseModel):
     skills: List[UserSkill]

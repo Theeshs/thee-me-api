@@ -7,10 +7,10 @@ from ..user.handler import (
     assign_skill_to_user,
     get_user,
     get_user_by_user_id,
+    get_user_repositories,
     list_all_users,
     me,
     save_user,
-get_user_repositories
 )
 from ..utils.password_utils import match_password, set_password_hash
 from .types import Credentials, ResponseUser, User
@@ -73,9 +73,8 @@ async def user_skill_add(db: Session, user_id: int, skill_list: list):
     await assign_skill_to_user(db, skill_list, user_id)
 
 
-
-async def user_repos(user_name: str, db: Session):
+async def user_repos(user_name: str, db: Session, limit: int = None, tech: str = None):
     user = await get_user(db, user_name)
     if not user:
         raise Exception("User not found")
-    return await get_user_repositories(db, user.id)
+    return await get_user_repositories(db, user, limit, tech)

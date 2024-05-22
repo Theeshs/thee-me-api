@@ -6,11 +6,18 @@ from fastapi.responses import JSONResponse
 from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
+from thee_me.crons.github_sync import sync_github_repositories
 from thee_me.database.connection import get_async_db
 
-from .controller import create_user, list_users, login_user, thee_me, user_skill_add, user_repos
+from .controller import (
+    create_user,
+    list_users,
+    login_user,
+    thee_me,
+    user_repos,
+    user_skill_add,
+)
 from .types import Credentials, User, UserSkillAssignment
-from thee_me.crons.github_sync import sync_github_repositories
 
 user_router = APIRouter()
 
@@ -60,6 +67,6 @@ async def git_sync(db: Session = Depends(get_async_db)):
 
 
 @user_router.get("/user/git_repositories")
-async def git_repositories(db: Session = Depends(get_async_db)):
-    repos = await user_repos("theekshana.sandaru@gmail.com", db)
+async def git_repositories(db: Session = Depends(get_async_db), limit: int = None, tech: str = None):
+    repos = await user_repos("theekshana.sandaru@gmail.com", db, limit, tech)
     return repos
