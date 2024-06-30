@@ -5,18 +5,18 @@ sudo docker stop TheeMeAPI
 echo "pruning docker system"
 yes | sudo docker system prune -a
 
-echo "deleting old deployment"
-sudo rm -rf ./thee-portfolio
+# echo "deleting old deployment"
+# sudo rm -rf ./thee-portfolio
 
-echo "creating app folder again"
-sudo mkdir ./thee-portfolio
+# echo "creating app folder again"
+# sudo mkdir ./thee-portfolio
 
-echo "moving files to app folder"
-sudo mv * ./thee-portfolio
+# echo "moving files to app folder"
+# sudo mv * ./thee-portfolio
 
-echo "moving env file"
-cd ./thee-portfolio
-sudo mv env .env
+# echo "moving env file"
+# cd ./thee-portfolio
+# sudo mv env .env
 
 echo "starting service"
 sudo docker compose up -d
