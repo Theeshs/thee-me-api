@@ -53,15 +53,17 @@ jobs:
         env:
           EC2_HOST: ${{ secrets.EC2_HOST }}
           EC2_USER_NAME: ${{ secrets.EC2_USER_NAME }}
+          echo "EC2_HOST
+          echo "EC2_USER_NAME
         run: |
-          scp -r * $EC2_USER_NAME@$EC2_HOST:root/home/api
+          scp -r * $EC2_USER_NAME@$EC2_HOST:home/ubuntu
 
       - name: Run bash script to deploy
         env:
           EC2_HOST: ${{ secrets.EC2_HOST }}
           EC2_USER_NAME: ${{ secrets.EC2_USER_NAME }}
         run: |
-          ssh -o StrictHostKeyChecking=no $EC2_USER_NAME@$EC2_HOST "chmod +x ./deploy.sh && ./deploy.sh"
+          ssh $EC2_USER_NAME@$EC2_HOST "chmod +x ./deploy.sh && ./deploy.sh"
 
       - name: Clean up
         if: always()
