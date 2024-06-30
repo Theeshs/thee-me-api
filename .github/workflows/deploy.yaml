@@ -56,7 +56,7 @@ jobs:
           EC2_HOST: ${{ secrets.EC2_HOST }}
           EC2_USER_NAME: ${{ secrets.EC2_USER_NAME }}
         run: |
-          scp -r * $EC2_USER_NAME@$EC2_HOST:/home/api
+          scp -r * $EC2_USER_NAME@$EC2_HOST:root/home/api
 
       - name: Run bash script to deploy
         env:
