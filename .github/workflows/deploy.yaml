@@ -8,16 +8,10 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout to code
         uses: actions/checkout@v2
-
-      # - name: Deploy using ssh
-      #   uses: appleboy/ssh-action@master
-      #   with:
-      #     host: ${{ secrets.EC2_HOST }}
-      #     username: ${{ secrets.EC2_USER_NAME }}
-      #     key: ${{ secrets.EC2_SSH_KEY }}
 
       - name: Create .env file dynamically
         env:
@@ -45,24 +39,6 @@ jobs:
         port: 22
         source: ".env"
         target: "/home/ubuntu/theeapi/.env"
-
-      # - name: Copy files to remote server
-      #   env:
-      #     EC2_HOST: ${{ secrets.EC2_HOST }}
-      #     EC2_USER_NAME: ${{ secrets.EC2_USER_NAME }}
-      #   run: |
-      #     scp -r * $EC2_USER_NAME@$EC2_HOST:home/ubuntu
-
-      # - name: Run bash script to deploy
-      #   env:
-      #     EC2_HOST: ${{ secrets.EC2_HOST }}
-      #     EC2_USER_NAME: ${{ secrets.EC2_USER_NAME }}
-      #   run: |
-      #     ssh $EC2_USER_NAME@$EC2_HOST "chmod +x ./deploy.sh && ./deploy.sh"
-
-      # - name: Clean up
-      #   if: always()
-      #   run: rm -rf ~/.ssh/id_rsa
 
       - name: Deploy using ssh
       uses: appleboy/ssh-action@master
