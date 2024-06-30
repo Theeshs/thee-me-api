@@ -50,6 +50,16 @@ jobs:
           source: '.'
           target: '/home/ubuntu/thee-me-api'
 
+      - name: Set execute permission on deploy script
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER_NAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
+          script: |
+            chmod +x /home/ubuntu/thee-me-api/deploy.sh
+
       - name: Trigger bash script on VPS
         uses: appleboy/ssh-action@master
         with:
