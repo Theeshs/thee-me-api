@@ -24,6 +24,8 @@ email-validator = "^2.0.0.post2"
 python-dotenv = "^1.0.1"
 apscheduler = "^3.10.4"
 requests = "^2.31.0"
+linkedin-api = "^2.1.1"
+linkedin-api-client = "^0.3.0"
 
 
 [build-system]
