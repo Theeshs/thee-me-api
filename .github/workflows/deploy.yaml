@@ -38,11 +38,11 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
           source: '.env'
-          target: '/home/ubuntu/thee-me-api/.env'
+          target: '/home/ubuntu/thee-me-api'
 
       - name: Transfer files to server
         run: |
-          scp -r -i ${{ secrets.SSH_PRIVATE_KEY }} -o StrictHostKeyChecking=no . ${{ secrets.EC2_USER_NAME }}@${{ secrets.EC2_HOST }}:/home/ubuntu/thee-me-api/
+          scp -r -i ${{ secrets.SSH_PRIVATE_KEY }} -o StrictHostKeyChecking=no . ${{ secrets.EC2_USER_NAME }}@${{ secrets.EC2_HOST }}:/home/ubuntu/thee-me-api
 
       # - name: Deploy using ssh
       #   uses: appleboy/ssh-action@master
