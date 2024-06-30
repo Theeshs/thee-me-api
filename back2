@@ -12,12 +12,12 @@ jobs:
       - name: Checkout to master
         uses: actions/checkout@v2
 
-      - name: Deploy using ssh
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER_NAME }}
-          key: ${{ secrets.EC2_SSH_KEY }}
+      - name: setup sshkey whitelist Ec2 IP address
+        run: |
+          mkdir -p ~/.ssh/
+          echo "${{ secrets.EC2_SSH_KEY }}" > ../private.key
+          sudo chmod 600 ../private.key
+          echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
 
       - name: Create .env file dynamically
         env:
