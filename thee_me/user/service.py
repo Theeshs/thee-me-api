@@ -18,6 +18,7 @@ from .controller import (
     user_skill_add,
 )
 from .types import Credentials, User, UserSkillAssignment
+from thee_me.user.linkedin_utils import linkedin_access_token
 
 user_router = APIRouter()
 
@@ -70,3 +71,13 @@ async def git_sync(db: Session = Depends(get_async_db)):
 async def git_repositories(db: Session = Depends(get_async_db), limit: int = None, tech: str = None):
     repos = await user_repos("theekshana.sandaru@gmail.com", db, limit, tech)
     return repos
+
+
+@user_router.get("/user/linkedin_sync")
+async def sync_linked_in(db: Session = Depends(get_async_db), code: str = None):
+    if code:
+        response = await linkedin_access_token(code)
+
+    else:
+        pass
+    return {"status": "success"}
