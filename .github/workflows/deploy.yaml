@@ -40,9 +40,15 @@ jobs:
           source: '.env'
           target: '/home/ubuntu/thee-me-api'
 
-      - name: Transfer files to server
-        run: |
-          scp -r -i ${{ secrets.SSH_PRIVATE_KEY }} -o StrictHostKeyChecking=no . ${{ secrets.EC2_USER_NAME }}@${{ secrets.EC2_HOST }}:/home/ubuntu/thee-me-api
+       - name: Transfer repository files
+         uses: appleboy/scp-action@master
+         with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER_NAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
+          source: '.'
+          target: '/home/ubuntu/thee-me-api'
 
       # - name: Deploy using ssh
       #   uses: appleboy/ssh-action@master
