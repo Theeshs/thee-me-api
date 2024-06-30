@@ -42,7 +42,7 @@ jobs:
 
       - name: Transfer files to server
         run: |
-          scp -r -i ${{ secrets.SSH_PRIVATE_KEY }} -o StrictHostKeyChecking=no . ${{ secrets.EC2_USER_NAME }}@${{ secrets.EC2_HOST }}:/home/ubuntu/theeapi/
+          scp -r -i ${{ secrets.SSH_PRIVATE_KEY }} -o StrictHostKeyChecking=no . ${{ secrets.EC2_USER_NAME }}@${{ secrets.EC2_HOST }}:/home/ubuntu/thee-me-api/
 
       # - name: Deploy using ssh
       #   uses: appleboy/ssh-action@master
